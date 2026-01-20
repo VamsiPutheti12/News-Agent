@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Paper {
+  id          String   @id @default(cuid())
+  arxivId     String   @unique
+  title       String
+  authors     String[]
+  abstract    String
+  category    String
+  pdfUrl      String
+  publishedAt DateTime
+  fetchedAt   DateTime @default(now())
+  weekOf      DateTime // Start of the week this paper belongs to
+
+  @@index([category])
+  @@index([weekOf])
+}
