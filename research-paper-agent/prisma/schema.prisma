@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Paper {
@@ -17,7 +18,7 @@ model Paper {
   pdfUrl      String
   publishedAt DateTime
   fetchedAt   DateTime @default(now())
-  weekOf      DateTime // Start of the week this paper belongs to
+  weekOf      DateTime
 
   @@index([category])
   @@index([weekOf])

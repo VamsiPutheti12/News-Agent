@@ -1,4 +1,4 @@
-# TaskFlow - Project Management Web Application
+# Research Paper Agent - arXiv Paper Aggregator
 
 A modern full-stack task management application built with React, Node.js, and PostgreSQL. Users can create projects, manage tasks, collaborate with team members, and track progress in real-time.
 

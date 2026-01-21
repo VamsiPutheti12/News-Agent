@@ -1,4 +1,4 @@
-# Global Antigravity Instructions
+# Research Paper Agent Instructions
 
 ## AGENTS.md Support
 - Check for the presence of AGENTS.md files in the project workspace
