@@ -17,6 +17,8 @@ const ARXIV_CATEGORIES = {
     'Machine Learning': 'cs.LG',
     'Neural Computing': 'cs.NE',
     'Statistical ML': 'stat.ML',
+    'Reinforcement Learning': 'cs.LG', // RL papers are often under cs.LG
+    'AI Safety': 'cs.AI', // AI Safety papers are often under cs.AI
 };
 
 const CATEGORY_QUERY = Object.values(ARXIV_CATEGORIES).map(cat => `cat:${cat}`).join('+OR+');
@@ -62,9 +64,16 @@ function parseArxivResponse(xml: string): ArxivPaper[] {
             authors.push(authorMatch[1].trim());
         }
 
-        // Extract category
+        // Extract category - first check arXiv category, then use keyword detection
         const categoryMatch = entry.match(/<arxiv:primary_category[^>]*term="([^"]+)"/);
-        const category = categoryMatch ? mapCategory(categoryMatch[1]) : 'Machine Learning';
+        let category = categoryMatch ? mapCategory(categoryMatch[1]) : 'Machine Learning';
+
+        // Override category based on content analysis for RL and AI Safety
+        if (detectRLPaper(title, abstract)) {
+            category = 'Reinforcement Learning';
+        } else if (detectSafetyPaper(title, abstract)) {
+            category = 'AI Safety';
+        }
 
         // Extract PDF link
         const pdfMatch = entry.match(/<link[^>]*title="pdf"[^>]*href="([^"]+)"/);
@@ -104,8 +113,35 @@ function mapCategory(arxivCategory: string): string {
         'cs.CV': 'Computer Vision',
         'cs.CL': 'NLP',
         'cs.RO': 'Robotics',
+        'cs.MA': 'Reinforcement Learning', // Multi-Agent Systems (often RL)
+        'cs.GT': 'AI Safety', // Game Theory (often AI Safety related)
     };
     return mapping[arxivCategory] || 'Machine Learning';
+}
+
+// Check if paper title/abstract suggests Reinforcement Learning
+export function detectRLPaper(title: string, abstract: string): boolean {
+    const rlKeywords = [
+        'reinforcement learning', 'rl agent', 'reward', 'policy gradient',
+        'q-learning', 'actor-critic', 'markov decision', 'mdp',
+        'deep q', 'dqn', 'ppo', 'a3c', 'sac', 'td3', 'rl-based',
+        'multi-agent', 'reward shaping', 'exploration', 'exploitation'
+    ];
+    const text = (title + ' ' + abstract).toLowerCase();
+    return rlKeywords.some(keyword => text.includes(keyword));
+}
+
+// Check if paper title/abstract suggests AI Safety
+export function detectSafetyPaper(title: string, abstract: string): boolean {
+    const safetyKeywords = [
+        'ai safety', 'alignment', 'safe ai', 'adversarial', 'robustness',
+        'interpretability', 'explainability', 'fairness', 'bias',
+        'trustworthy', 'reliable', 'secure', 'privacy', 'ethical',
+        'human feedback', 'rlhf', 'value alignment', 'unsafe', 'jailbreak',
+        'red teaming', 'guardrails', 'constitutional ai'
+    ];
+    const text = (title + ' ' + abstract).toLowerCase();
+    return safetyKeywords.some(keyword => text.includes(keyword));
 }
 
 // Filter papers from the past week

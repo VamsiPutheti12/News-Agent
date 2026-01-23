@@ -34,6 +34,8 @@ export default function PaperCard({ paper }: PaperCardProps) {
         'Artificial Intelligence': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
         'Machine Learning': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
         'Deep Learning': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+        'Reinforcement Learning': 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200',
+        'AI Safety': 'bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-200',
         'Computer Vision': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
         'NLP': 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200',
     };
